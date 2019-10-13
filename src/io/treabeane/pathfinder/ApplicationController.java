@@ -1,5 +1,10 @@
 package io.treabeane.pathfinder;
 
+import io.treabeane.pathfinder.algorithm.Algorithm;
+import io.treabeane.pathfinder.algorithm.FloodAlgorithm;
+import io.treabeane.pathfinder.block.Block;
+import io.treabeane.pathfinder.block.BlockManager;
+import io.treabeane.pathfinder.block.BlockState;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

@@ -1,4 +1,4 @@
-package io.treabeane.pathfinder;
+package io.treabeane.pathfinder.block;
 
 public enum BlockState {
   EMPTY("empty", true),

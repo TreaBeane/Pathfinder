@@ -1,4 +1,4 @@
-package io.treabeane.pathfinder;
+package io.treabeane.pathfinder.algorithm;
 
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;

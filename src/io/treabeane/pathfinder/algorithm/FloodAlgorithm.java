@@ -1,6 +1,8 @@
-package io.treabeane.pathfinder;
+package io.treabeane.pathfinder.algorithm;
 
-import javafx.scene.control.Slider;
+import io.treabeane.pathfinder.block.Block;
+import io.treabeane.pathfinder.block.BlockManager;
+import io.treabeane.pathfinder.block.BlockState;
 import javafx.scene.layout.Pane;
 
 import java.util.*;
@@ -47,7 +49,7 @@ public class FloodAlgorithm extends Algorithm {
           searching.addAll(BlockManager.getAdjacentBlocks(current, false));
 
           int finalCount1 = count++;
-          List<Block> blocks = searching.stream().filter(block -> block.getState().searchable).collect(Collectors.toList());
+          List<Block> blocks = searching.stream().filter(block -> block.getState().isSearchable()).collect(Collectors.toList());
 
           blocks.forEach(block -> {
             if (searched.contains(block))return;

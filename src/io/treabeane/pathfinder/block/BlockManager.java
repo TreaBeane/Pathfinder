@@ -1,4 +1,4 @@
-package io.treabeane.pathfinder;
+package io.treabeane.pathfinder.block;
 
 import javafx.scene.layout.Pane;
 
