@@ -1,50 +1,53 @@
 #empty {
     -fx-background-color: #ECF0F1;
-    -fx-border-width: 0.5px;
-    -fx-border-color: #707070;
-    -fx-fill: purple;
+    -fx-fill: #ECF0F1;
+    -fx-border-color: black;
+    -fx-border-width: 5;
+    -fx-border-style: solid;
 }
 
 #searched {
-    -fx-background-color: #2ecc71;
+    -fx-fill: #2ecc71;
     -fx-border-width: 0.5px;
     -fx-border-color: #707070;
-    -fx-fill: purple;
 }
 
 #searching {
-    -fx-background-color: #f1c40f;
+    -fx-fill: #f1c40f;
     -fx-border-width: 0.5px;
     -fx-border-color: #707070;
-    -fx-fill: purple;
 }
 
 #start {
-    -fx-background-color: #E74C3C;
+    -fx-fill: #E74C3C;
     -fx-border-width: 0.5px;
     -fx-border-color: #707070;
-    -fx-fill: purple;
 }
 
 #finish {
-    -fx-background-color: #3498db;
+    -fx-fill: #3498db;
     -fx-border-width: 0.5px;
     -fx-border-color: #707070;
-    -fx-fill: purple;
 }
 
 #barrier {
-    -fx-background-color: #2c3e50;
+    -fx-fill: #2c3e50;
     -fx-border-width: 0.5px;
     -fx-border-color: #707070;
-    -fx-fill: purple;
 }
 
 #found {
-    -fx-background-color: #9b59b6;
+    -fx-fill: #9b59b6;
     -fx-border-width: 0.5px;
     -fx-border-color: #707070;
-    -fx-fill: purple;
+}
+
+#toolPane{
+    -fx-background-color: rgba(0, 0, 0, 0.15);
+}
+
+#toolPane:hover{
+    -fx-background-color: rgba(0, 0, 0, 0.35);
 }
 
 #noPathPane .label{
@@ -63,9 +66,5 @@
 }
 
 #empty:hover {
-    -fx-background-color: #BDC3C7;
-}
-
-#empty:pressed {
-    -fx-background-color: #E74C3C;
+    -fx-fill: #BDC3C7;
 }

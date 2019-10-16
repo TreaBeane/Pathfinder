@@ -30,24 +30,29 @@ public class BlockManager {
     return blockSet;
   }
 
-  public static Set<Block> getAdjacentBlocks(Block block){
-    return getAdjacentBlocks(block, true);
-  }
-
-  public static Set<Block> getAdjacentBlocks(Block block, boolean includeCorners){
+  public static Set<Block> getNeighbor(Block block, boolean straight){
     Set<Block> adjacent = new HashSet<>();
 
-    BlockManager.findBlock(block.getX() + 1, block.getY()).ifPresent(adjacent::add);
-    BlockManager.findBlock(block.getX() - 1, block.getY()).ifPresent(adjacent::add);
-    BlockManager.findBlock(block.getX(), block.getY() + 1).ifPresent(adjacent::add);
-    BlockManager.findBlock(block.getX(), block.getY() - 1).ifPresent(adjacent::add);
-
-    if (includeCorners) {
+    if (straight) {
+      BlockManager.findBlock(block.getX() + 1, block.getY()).ifPresent(adjacent::add);
+      BlockManager.findBlock(block.getX() - 1, block.getY()).ifPresent(adjacent::add);
+      BlockManager.findBlock(block.getX(), block.getY() + 1).ifPresent(adjacent::add);
+      BlockManager.findBlock(block.getX(), block.getY() - 1).ifPresent(adjacent::add);
+    } else  {
       BlockManager.findBlock(block.getX() + 1, block.getY() + 1).ifPresent(adjacent::add);
       BlockManager.findBlock(block.getX() - 1, block.getY() + 1).ifPresent(adjacent::add);
       BlockManager.findBlock(block.getX() + 1, block.getY() - 1).ifPresent(adjacent::add);
       BlockManager.findBlock(block.getX() - 1, block.getY() - 1).ifPresent(adjacent::add);
     }
+
+    return adjacent;
+  }
+
+  public static Set<Block> getAllNeighbor(Block block){
+    Set<Block> adjacent = new HashSet<>();
+
+    adjacent.addAll(getNeighbor(block, true));
+    adjacent.addAll(getNeighbor(block, false));
 
     return adjacent;
   }

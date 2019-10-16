@@ -7,30 +7,38 @@ import javafx.scene.layout.Pane;
 
 import java.util.*;
 
-public class FloodAlgorithm extends Algorithm {
+public class AStarAlgorithm extends Algorithm {
 
-  private Map<Block, Integer> blockCost = new HashMap<>();
-  private Queue<Block> openQueue = new PriorityQueue<>(255, Comparator.comparingInt(this::getBlockValue));
+  private final int STRAIGHT_COST = 10;
+  private final int DIAGONAL_COST = 14;
+
+  private Map<Block, Integer> gCost = new LinkedHashMap<>();
+  private Map<Block, Integer> hCost = new LinkedHashMap<>();
+
+  private Queue<Block> openQueue = new PriorityQueue<>(255, Comparator.comparingInt(this::getFCost));
   private List<Block> closeList = new LinkedList<>();
 
-
-  public FloodAlgorithm(Pane noPathPane) {
+  public AStarAlgorithm(Pane noPathPane) {
     super(noPathPane);
   }
 
   @Override
   public TimerTask loop() {
     Optional<Block> optionalStartBlock = BlockManager.findBlocksByState(BlockState.START).stream().findFirst();
+    Optional<Block> optionalFinishBlock =  BlockManager.findBlocksByState(BlockState.FINISH).stream().findFirst();
 
-    if (optionalStartBlock.isPresent()){
+    if (optionalStartBlock.isPresent() && optionalFinishBlock.isPresent()){
       Block startBlock = optionalStartBlock.get();
-      setBlockCost(startBlock, 0);
+      Block finishBlock = optionalFinishBlock.get();
 
-      openQueue.addAll(BlockManager.getNeighbor(startBlock, true));
+      setGCost(startBlock, 0);
+      setHCost(startBlock, calculateHCost(startBlock, finishBlock, 1));
+
+      openQueue.offer(startBlock);
 
       return new TimerTask() {
         public void run() {
-          if (!openQueue.isEmpty()){
+          if (!openQueue.isEmpty()) {
             Block target = openQueue.poll();
 
             if (target.getState().equals(BlockState.FINISH)){
@@ -39,14 +47,29 @@ public class FloodAlgorithm extends Algorithm {
               return;
             }
 
-            BlockManager.getAllNeighbor(target).forEach(block -> {
+            BlockManager.getNeighbor(target, true).forEach(block -> {
               if (openQueue.contains(block) || closeList.contains(block)){
                 return;
               }
 
               if (block.getState().equals(BlockState.EMPTY) || block.getState().equals(BlockState.FINISH)){
                 block.setParentBlock(target);
-                setBlockCost(block, getBlockValue(block.getParentBlock()) + 1);
+                setGCost(block, getGCost(block.getParentBlock()) + STRAIGHT_COST);
+                setHCost(block, calculateHCost(block, finishBlock, STRAIGHT_COST));
+
+                openQueue.add(block);
+              }
+            });
+
+            BlockManager.getNeighbor(target, false).forEach(block -> {
+              if (openQueue.contains(block) || closeList.contains(block)){
+                return;
+              }
+
+              if (block.getState().equals(BlockState.EMPTY) || block.getState().equals(BlockState.FINISH)){
+                block.setParentBlock(target);
+                setGCost(block, getGCost(block.getParentBlock()) + DIAGONAL_COST);
+                setHCost(block, calculateHCost(block, finishBlock, DIAGONAL_COST));
 
                 openQueue.add(block);
               }
@@ -71,9 +94,9 @@ public class FloodAlgorithm extends Algorithm {
         }
       };
     }
-
     return null;
   }
+
 
   @Override
   public void finish() {
@@ -94,7 +117,8 @@ public class FloodAlgorithm extends Algorithm {
 
   @Override
   public void reset() {
-    blockCost.clear();
+    gCost.clear();
+    hCost.clear();
     openQueue.clear();
     closeList.clear();
 
@@ -105,13 +129,37 @@ public class FloodAlgorithm extends Algorithm {
         block.setState(BlockState.EMPTY);
       }
     });
+
   }
 
-  private void setBlockCost(Block block, int cost) {
-    blockCost.put(block, cost);
+  private void setGCost(Block block, int cost){
+    gCost.put(block, cost);
   }
 
-  private int getBlockValue(Block block) {
-    return blockCost.getOrDefault(block, 0);
+  private int getGCost(Block block){
+    return gCost.getOrDefault(block, -1);
   }
+
+  private void setHCost(Block block, int cost){
+    hCost.put(block, cost);
+  }
+
+  private int getHCost(Block block){
+    return hCost.getOrDefault(block, -1);
+  }
+
+  private int calculateHCost(Block block, Block finishBlock, int cost){
+    int bX = block.getX();
+    int bY = block.getY();
+
+    int fX = finishBlock.getX();
+    int fY = finishBlock.getY();
+
+    return cost * (Math.abs(bX - fX) + Math.abs(bY - fY));
+  }
+
+  private int getFCost(Block block){
+    return getGCost(block) + getHCost(block);
+  }
+
 }

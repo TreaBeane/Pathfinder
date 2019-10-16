@@ -1,23 +1,24 @@
 package io.treabeane.pathfinder.block;
 
-import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 
 public class Block {
 
-  private final Pane pane;
+  private final Rectangle pane;
   private final int x, y;
   private BlockState state = BlockState.EMPTY;
 
+  private Block parentBlock;
+
   private int gCost, hCost;
 
-  public Block(Pane pane, int x, int y) {
+  public Block(Rectangle pane, int x, int y) {
     this.pane = pane;
     this.x = x;
     this.y = y;
   }
 
-  public Pane getPane() {
+  public Rectangle getPane() {
     return pane;
   }
 
@@ -38,32 +39,15 @@ public class Block {
     return y;
   }
 
-  public int getGCost() {
-    return gCost;
+  public Block getParentBlock() {
+    return parentBlock;
   }
 
-  public void setGCost(int gCost) {
-    this.gCost = gCost;
+  public boolean hasParentBlock(){
+    return getParentBlock() != null;
   }
 
-  public int getHCost() {
-    return hCost;
-  }
-
-  public void setHCost(int hCost) {
-    this.hCost = hCost;
-  }
-
-  public int getFCost() {
-    return getGCost() + getHCost();
-  }
-
-  public void setTag(String s) {
-    getPane().getChildren().filtered(node -> node instanceof Label)
-            .forEach(node -> {
-              if (node instanceof Label){
-                ((Label) node).setText(s);
-              }
-            });
+  public void setParentBlock(Block parentBlock) {
+    this.parentBlock = parentBlock;
   }
 }

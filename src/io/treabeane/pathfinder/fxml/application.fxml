@@ -1,44 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<?import javafx.scene.shape.Box?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.text.TextFlow?>
+
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="io.treabeane.pathfinder.ApplicationController"
             minHeight="480" minWidth="720">
     <!--  Path Grid  -->
-    <GridPane fx:id="graphPane"
-            styleClass="grid"
-              minWidth="620"
-              minHeight="300"
-              AnchorPane.topAnchor="26"
-              AnchorPane.leftAnchor="15">
-    </GridPane>
 
-    <GridPane translateY="345" translateX="50">
-        <Text styleClass="text" text="Algorithm: " GridPane.columnIndex="0"/>
-        <ChoiceBox fx:id="algorithmBox" minHeight="15" minWidth="100" GridPane.columnIndex="1"/>
-    </GridPane>
-    <GridPane fx:id="noPathPane" translateY="445" translateX="50">
-        <Label text="No Path Found..."/>
-    </GridPane>
-    <GridPane translateY="345" translateX="450">
-        <Button onAction="#runAlgorithm" text="Run"></Button>
-    </GridPane>
-    <GridPane translateY="345" translateX="500">
-        <Button onAction="#reset" text="Reset"></Button>
-    </GridPane>
-    <GridPane translateY="400" translateX="450">
-        <Label text="Speed: "/>
-    </GridPane>
-    <GridPane translateY="425" translateX="450">
-        <Slider fx:id="speedSlider" blockIncrement="1" layoutX="26.0" layoutY="32.0" majorTickUnit="50" minorTickCount="1" showTickLabels="true" showTickMarks="true" />
-    </GridPane>
+    <Pane
+            maxWidth="620"
+            maxHeight="300">
+        <GridPane fx:id="graphPane"
+                  styleClass="grid"
+                  minWidth="620"
+                  minHeight="300">
+        </GridPane>
+    </Pane>
+
+    <Pane fx:id="toolPane" prefWidth="240" prefHeight="200" AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0">
+        <GridPane translateY="20" translateX="20">
+            <Text styleClass="text" text="Algorithm: " GridPane.columnIndex="0"/>
+            <ChoiceBox fx:id="algorithmBox" minHeight="15" minWidth="100" GridPane.columnIndex="1"/>
+        </GridPane>
+        <GridPane fx:id="noPathPane" translateY="40" translateX="20">
+            <Label text="No Path Found..."/>
+        </GridPane>
+        <GridPane translateY="60" translateX="20">
+            <Button onAction="#runAlgorithm" text="Run"/>
+        </GridPane>
+        <GridPane translateY="60" translateX="80">
+            <Button onAction="#reset" text="Reset"/>
+        </GridPane>
+        <GridPane translateY="100" translateX="20">
+            <Label text="Speed: "/>
+        </GridPane>
+        <GridPane translateY="120" translateX="20">
+            <Slider fx:id="speedSlider" blockIncrement="1" layoutX="26.0" layoutY="32.0" majorTickUnit="50" minorTickCount="1" showTickLabels="true" showTickMarks="true" />
+        </GridPane>
+    </Pane>
 </AnchorPane>
