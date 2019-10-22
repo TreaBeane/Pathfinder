@@ -1,9 +1,11 @@
 package io.treabeane.pathfinder.algorithm;
 
+import io.treabeane.pathfinder.ApplicationController;
 import io.treabeane.pathfinder.block.Block;
 import io.treabeane.pathfinder.block.BlockManager;
 import io.treabeane.pathfinder.block.BlockState;
-import javafx.scene.layout.Pane;
+import javafx.application.Platform;
+import javafx.scene.control.Label;
 
 import java.util.*;
 
@@ -18,12 +20,15 @@ public class AStarAlgorithm extends Algorithm {
   private Queue<Block> openQueue = new PriorityQueue<>(255, Comparator.comparingInt(this::getFCost));
   private List<Block> closeList = new LinkedList<>();
 
-  public AStarAlgorithm(Pane noPathPane) {
-    super(noPathPane);
+  private long timeAtMillis;
+
+  public AStarAlgorithm(ApplicationController controller) {
+    super(controller);
   }
 
   @Override
   public TimerTask loop() {
+    timeAtMillis = System.currentTimeMillis();
     Optional<Block> optionalStartBlock = BlockManager.findBlocksByState(BlockState.START).stream().findFirst();
     Optional<Block> optionalFinishBlock =  BlockManager.findBlocksByState(BlockState.FINISH).stream().findFirst();
 
@@ -47,6 +52,7 @@ public class AStarAlgorithm extends Algorithm {
               return;
             }
 
+//            Searching Non-Diagonal Blocks
             BlockManager.getNeighbor(target, true).forEach(block -> {
               if (openQueue.contains(block) || closeList.contains(block)){
                 return;
@@ -61,6 +67,7 @@ public class AStarAlgorithm extends Algorithm {
               }
             });
 
+//            Searching Diagonal Blocks
             BlockManager.getNeighbor(target, false).forEach(block -> {
               if (openQueue.contains(block) || closeList.contains(block)){
                 return;
@@ -100,6 +107,7 @@ public class AStarAlgorithm extends Algorithm {
 
   @Override
   public void finish() {
+    long finishTimeAtMillis = System.currentTimeMillis() - timeAtMillis;
     Optional<Block> optionalFinishBlock =  BlockManager.findBlocksByState(BlockState.FINISH).stream().findFirst();
 
     Queue<Block> blockQueue = new LinkedList<>();
@@ -113,6 +121,8 @@ public class AStarAlgorithm extends Algorithm {
         blockQueue.offer(pathBlock.getParentBlock());
       }
     }
+
+    Platform.runLater(() -> getController().messageLabel.setText(String.format("Finished in %s ms", (finishTimeAtMillis))));
   }
 
   @Override
@@ -122,7 +132,8 @@ public class AStarAlgorithm extends Algorithm {
     openQueue.clear();
     closeList.clear();
 
-    getNoPathPane().setVisible(false);
+    Platform.runLater(() -> getController().messageLabel.setText(""));
+
     loop().cancel();
     BlockManager.getBlockSet().stream().filter(block -> block.getState().isSearchable()).forEach(block -> {
       if (!block.getState().equals(BlockState.FINISH) && !block.getState().equals(BlockState.START)) {

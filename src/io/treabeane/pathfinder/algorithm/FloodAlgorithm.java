@@ -1,9 +1,11 @@
 package io.treabeane.pathfinder.algorithm;
 
+import io.treabeane.pathfinder.ApplicationController;
 import io.treabeane.pathfinder.block.Block;
 import io.treabeane.pathfinder.block.BlockManager;
 import io.treabeane.pathfinder.block.BlockState;
-import javafx.scene.layout.Pane;
+import javafx.application.Platform;
+import javafx.scene.control.Label;
 
 import java.util.*;
 
@@ -13,13 +15,15 @@ public class FloodAlgorithm extends Algorithm {
   private Queue<Block> openQueue = new PriorityQueue<>(255, Comparator.comparingInt(this::getBlockValue));
   private List<Block> closeList = new LinkedList<>();
 
+  private long timeAtMillis;
 
-  public FloodAlgorithm(Pane noPathPane) {
-    super(noPathPane);
+  public FloodAlgorithm(ApplicationController controller) {
+    super(controller);
   }
 
   @Override
   public TimerTask loop() {
+    timeAtMillis = System.currentTimeMillis();
     Optional<Block> optionalStartBlock = BlockManager.findBlocksByState(BlockState.START).stream().findFirst();
 
     if (optionalStartBlock.isPresent()){
@@ -77,6 +81,9 @@ public class FloodAlgorithm extends Algorithm {
 
   @Override
   public void finish() {
+    long finishTimeAtMillis = System.currentTimeMillis() - timeAtMillis;
+    Platform.runLater(() -> getController().messageLabel.setText(String.format("Finished in %s ms", (finishTimeAtMillis))));
+
     Optional<Block> optionalFinishBlock =  BlockManager.findBlocksByState(BlockState.FINISH).stream().findFirst();
 
     Queue<Block> blockQueue = new LinkedList<>();
@@ -85,11 +92,14 @@ public class FloodAlgorithm extends Algorithm {
     while (!blockQueue.isEmpty()){
       Block pathBlock = blockQueue.poll();
 
+      if (pathBlock == null)return;
+
       if (!pathBlock.getState().equals(BlockState.START)) {
         pathBlock.setState(BlockState.FOUND);
         blockQueue.offer(pathBlock.getParentBlock());
       }
     }
+
   }
 
   @Override
@@ -98,8 +108,11 @@ public class FloodAlgorithm extends Algorithm {
     openQueue.clear();
     closeList.clear();
 
-    getNoPathPane().setVisible(false);
-    loop().cancel();
+    Platform.runLater(() -> getController().messageLabel.setText(""));
+
+    if (loop() != null) {
+      loop().cancel();
+    }
     BlockManager.getBlockSet().stream().filter(block -> block.getState().isSearchable()).forEach(block -> {
       if (!block.getState().equals(BlockState.FINISH) && !block.getState().equals(BlockState.START)) {
         block.setState(BlockState.EMPTY);

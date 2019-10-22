@@ -1,30 +1,25 @@
 package io.treabeane.pathfinder.algorithm;
 
-import javafx.scene.control.Slider;
-import javafx.scene.layout.Pane;
+import io.treabeane.pathfinder.ApplicationController;
+import javafx.scene.control.Label;
 
-import javax.xml.soap.Node;
-import java.util.Timer;
 import java.util.TimerTask;
 
 public abstract class Algorithm {
-  
-  private final Pane noPathPane;
 
-  public Algorithm(Pane noPathPane) {
-    this.noPathPane = noPathPane;
+  private final ApplicationController controller;
+
+  public Algorithm(ApplicationController controller) {
+    this.controller = controller;
   }
 
   public abstract TimerTask loop();
 
   public abstract void finish();
 
-  public Pane getNoPathPane() {
-    return noPathPane;
-  }
-
   public abstract void reset();
 
-
-
+  public ApplicationController getController() {
+    return controller;
+  }
 }

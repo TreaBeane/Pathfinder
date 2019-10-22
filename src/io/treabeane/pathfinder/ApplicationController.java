@@ -13,16 +13,18 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Timer;
 
 public class ApplicationController {
 
   @FXML
-  public GridPane noPathPane;
+  public Label messageLabel;
 
   @FXML
   private GridPane graphPane;
@@ -39,7 +41,7 @@ public class ApplicationController {
 
   @FXML
   protected void initialize() {
-    noPathPane.setVisible(false);
+    algorithm = new FloodAlgorithm(this);
 
     createGraph();
 
@@ -54,12 +56,12 @@ public class ApplicationController {
   private void runAlgorithm(ActionEvent e) {
     switch (algorithmBox.getValue()){
       case "A*": {
-        algorithm = new AStarAlgorithm(noPathPane);
+        algorithm = new AStarAlgorithm(this);
         break;
       }
       case "Flood":
       default:{
-        algorithm = new FloodAlgorithm(noPathPane);
+        algorithm = new FloodAlgorithm(this);
         break;
       }
     }
@@ -76,13 +78,13 @@ public class ApplicationController {
   private void createGraph(){
     for (int x = 0; x < 200; x++) {
       for (int y = 0; y < 100; y++) {
-        Rectangle pane = new Rectangle();
-        Block block = new Block(pane, x, y);
-        pane.setId("empty");
-        pane.setWidth(20);
-        pane.setHeight(20);
+        Rectangle rectangle = new Rectangle();
+        Block block = new Block(rectangle, x, y);
+        rectangle.setId("empty");
+        rectangle.setWidth(20);
+        rectangle.setHeight(20);
 
-        pane.setOnMouseClicked(event -> {
+        rectangle.setOnMouseClicked(event -> {
           if (block.getState().equals(BlockState.EMPTY) && BlockManager.findBlocksByState(BlockState.START).isEmpty()) {
             block.setState(BlockState.START);
           } else if (block.getState().equals(BlockState.START) || BlockManager.findBlocksByState(BlockState.FINISH).isEmpty()) {
@@ -103,26 +105,30 @@ public class ApplicationController {
           }
         });
 
-        graphPane.add(pane, x, y);
+        rectangle.setStroke(Color.BLACK);
+        rectangle.setStrokeType(StrokeType.INSIDE);
+        rectangle.setStrokeWidth(.5);
+
+        graphPane.add(rectangle, x, y);
         BlockManager.registerBlock(block);
       }
     }
+  }
 
-    graphPane.setOnScroll(event -> {
-      double zoomFactor = 1.05;
-      double deltaY = event.getDeltaY();
-      if (deltaY < 0){
-        zoomFactor = 2.0 - zoomFactor;
+  @FXML
+  public void random(ActionEvent event) {
+    List<Block> blocks = new LinkedList<>(BlockManager.findBlocksByState(BlockState.EMPTY));
+    algorithm.reset();
+    blocks.addAll(BlockManager.findBlocksByState(BlockState.BARRIER));
+    System.out.println(Math.random());
+    blocks.forEach(block -> {
+      double random = Math.random();
+      if (random <= .3){
+        block.setState(BlockState.BARRIER);
+      }else {
+        block.setState(BlockState.EMPTY);
       }
-
-      double finalZoomFactor = zoomFactor;
-      BlockManager.getBlockSet().forEach(block -> {
-        if (block.getPane().getWidth() <= 5 || block.getPane().getWidth() >= 50){
-          return;
-        }
-        block.getPane().setWidth(block.getPane().getWidth() * finalZoomFactor);
-        block.getPane().setHeight(block.getPane().getHeight() * finalZoomFactor);
-      });
     });
   }
+
 }
