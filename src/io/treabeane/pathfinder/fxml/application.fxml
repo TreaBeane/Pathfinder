@@ -29,8 +29,8 @@
         <Button translateY="60" translateX="10" onAction="#runAlgorithm" text="Run"/>
         <Button translateY="60" translateX="60" onAction="#reset" text="Reset"/>
         <Button translateY="60" translateX="120" onAction="#random" text="Random"/>
-        <Label translateY="100" translateX="20" text="Speed: "/>
-        <Slider fx:id="speedSlider" translateY="120" translateX="20" blockIncrement="1" majorTickUnit="50" minorTickCount="1" showTickLabels="true" showTickMarks="true" />
+        <Label fx:id="delayMessageLabel" translateY="100" translateX="20" text="Delay: "/>
+        <Slider fx:id="delaySlider" translateY="120" translateX="20" blockIncrement="1" majorTickUnit="50" minorTickCount="1" showTickLabels="true" showTickMarks="true" />
         <Label fx:id="messageLabel" translateY="159" translateX="20" text=" "/>
     </Pane>
 </AnchorPane>

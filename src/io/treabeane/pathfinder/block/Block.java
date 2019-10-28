@@ -10,8 +10,6 @@ public class Block {
 
   private Block parentBlock;
 
-  private int gCost, hCost;
-
   public Block(Rectangle pane, int x, int y) {
     this.pane = pane;
     this.x = x;
@@ -41,10 +39,6 @@ public class Block {
 
   public Block getParentBlock() {
     return parentBlock;
-  }
-
-  public boolean hasParentBlock(){
-    return getParentBlock() != null;
   }
 
   public void setParentBlock(Block parentBlock) {

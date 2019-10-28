@@ -5,7 +5,6 @@ import io.treabeane.pathfinder.block.Block;
 import io.treabeane.pathfinder.block.BlockManager;
 import io.treabeane.pathfinder.block.BlockState;
 import javafx.application.Platform;
-import javafx.scene.control.Label;
 
 import java.util.*;
 
@@ -122,7 +121,15 @@ public class AStarAlgorithm extends Algorithm {
       }
     }
 
-    Platform.runLater(() -> getController().messageLabel.setText(String.format("Finished in %s ms", (finishTimeAtMillis))));
+    Platform.runLater(() -> {
+      String time = finishTimeAtMillis + "ms";
+
+      if (finishTimeAtMillis > 1000){
+        time = (finishTimeAtMillis/1000) + "s";
+      }
+
+      getController().messageLabel.setText(String.format("Finished in %s", time));
+    });
   }
 
   @Override

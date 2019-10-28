@@ -25,6 +25,7 @@ public class ApplicationController {
 
   @FXML
   public Label messageLabel;
+  public Label delayMessageLabel;
 
   @FXML
   private GridPane graphPane;
@@ -33,19 +34,23 @@ public class ApplicationController {
   private ChoiceBox<String> algorithmBox;
 
   @FXML
-  private Slider speedSlider;
+  private Slider delaySlider;
 
-  private long speed = 1L;
+  private long delay = 1L;
 
   private Algorithm algorithm;
 
   @FXML
   protected void initialize() {
     algorithm = new FloodAlgorithm(this);
+    delayMessageLabel.setText("Delay: " + delay + "ms");
 
     createGraph();
 
-    speedSlider.valueProperty().addListener((observable, oldValue, newValue) -> this.speed = newValue.intValue() + 1);
+    delaySlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+      this.delay = newValue.intValue() + 1;
+      delayMessageLabel.setText("Delay: " + this.delay + "ms");
+    });
 
     algorithmBox.setValue("Flood");
     algorithmBox.setItems(FXCollections.observableArrayList("Flood", "A*"));
@@ -67,7 +72,7 @@ public class ApplicationController {
     }
 
     algorithm.reset();
-    new Timer().schedule(algorithm.loop(), 0L, this.speed);
+    new Timer().schedule(algorithm.loop(), 0L, this.delay);
   }
 
   @FXML

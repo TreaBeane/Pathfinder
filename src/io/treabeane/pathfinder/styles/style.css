@@ -77,22 +77,3 @@
 #messageLabel {
     -fx-font-size: 20px;
 }
-
-/*!* New Styles *!*/
-/*#controls:hover {*/
-/*    -fx-background-color: blue;*/
-/*}*/
-
-/*#block_node {*/
-/*    -fx-stroke: #636e72;*/
-/*    -fx-stroke-type: inside;*/
-/*    -fx-stroke-width: 1px;*/
-/*}*/
-
-/*#block_node:hover{*/
-/*    -fx-fill: #dfe6e9;*/
-/*}*/
-
-/*#block_node:pressed{*/
-/*    -fx-fill: #55efc4;*/
-/*}*/

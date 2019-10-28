@@ -1,7 +1,5 @@
 package io.treabeane.pathfinder.block;
 
-import javafx.scene.layout.Pane;
-
 import java.util.*;
 
 public class BlockManager {
@@ -14,14 +12,6 @@ public class BlockManager {
 
   public static void registerBlock(Block block){
     getBlockSet().add(block);
-  }
-
-  public static Optional<Block> findBlock(Pane pane){
-    return blockSet.stream().filter(block -> block.getPane().equals(pane)).findFirst();
-  }
-
-  public static Optional<Block> findBlock(double x, double y){
-    return blockSet.stream().filter(block -> block.getX() == x && block.getY() == y).findFirst();
   }
 
   public static Set<Block> findBlocksByState(BlockState state){
@@ -56,4 +46,9 @@ public class BlockManager {
 
     return adjacent;
   }
+
+  private static Optional<Block> findBlock(double x, double y){
+    return blockSet.stream().filter(block -> block.getX() == x && block.getY() == y).findFirst();
+  }
+
 }

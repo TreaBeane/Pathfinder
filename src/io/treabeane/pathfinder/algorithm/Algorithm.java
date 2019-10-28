@@ -1,7 +1,6 @@
 package io.treabeane.pathfinder.algorithm;
 
 import io.treabeane.pathfinder.ApplicationController;
-import javafx.scene.control.Label;
 
 import java.util.TimerTask;
 
@@ -19,7 +18,7 @@ public abstract class Algorithm {
 
   public abstract void reset();
 
-  public ApplicationController getController() {
+  ApplicationController getController() {
     return controller;
   }
 }

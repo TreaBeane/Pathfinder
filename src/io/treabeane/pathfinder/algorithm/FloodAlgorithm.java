@@ -5,7 +5,6 @@ import io.treabeane.pathfinder.block.Block;
 import io.treabeane.pathfinder.block.BlockManager;
 import io.treabeane.pathfinder.block.BlockState;
 import javafx.application.Platform;
-import javafx.scene.control.Label;
 
 import java.util.*;
 
@@ -82,8 +81,16 @@ public class FloodAlgorithm extends Algorithm {
   @Override
   public void finish() {
     long finishTimeAtMillis = System.currentTimeMillis() - timeAtMillis;
-    Platform.runLater(() -> getController().messageLabel.setText(String.format("Finished in %s ms", (finishTimeAtMillis))));
 
+    Platform.runLater(() -> {
+      String time = finishTimeAtMillis + "ms";
+
+      if (finishTimeAtMillis > 1000){
+        time = (finishTimeAtMillis/1000) + "s";
+      }
+
+      getController().messageLabel.setText(String.format("Finished in %s", time));
+    });
     Optional<Block> optionalFinishBlock =  BlockManager.findBlocksByState(BlockState.FINISH).stream().findFirst();
 
     Queue<Block> blockQueue = new LinkedList<>();
